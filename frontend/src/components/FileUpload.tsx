@@ -45,6 +45,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUploadComplete }) => {
 					onChange={handleFileChange}
 					accept=".txt,.pdf,.doc,.docx"
 				/>
+				<h5>Files must be in .txt, .pdf, .doc, or .docx format and cannot exceed 10MB.</h5>
 				<button type="submit" disabled={!file}>
 					Upload
 				</button>

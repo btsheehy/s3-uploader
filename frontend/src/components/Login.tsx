@@ -40,6 +40,7 @@ const Login: React.FC = () => {
 				/>
 				<button type="submit">Login</button>
 			</form>
+			<h4>Don't have an account? <a href="/register">Register</a></h4>
 		</div>
 	)
 }

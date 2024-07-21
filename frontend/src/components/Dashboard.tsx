@@ -28,6 +28,7 @@ const Dashboard: React.FC = () => {
 
 	return (
 		<div>
+			<img src="%PUBLIC%/ColeridgeLogo.png" alt="ColeridgeLogo" />
 			<h1>Dashboard</h1>
 			<button onClick={handleLogout}>Logout</button>
 			<FileUpload onUploadComplete={fetchStats} />
