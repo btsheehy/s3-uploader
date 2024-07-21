@@ -2,21 +2,25 @@ const { DataTypes } = require("sequelize")
 
 module.exports = (sequelize) => {
 	const Upload = sequelize.define("Upload", {
-		filename: {
+		fileName: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		filesize: {
+		fileSize: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
-		filetype: {
+		fileType: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
 		uploadDate: {
 			type: DataTypes.DATE,
 			defaultValue: DataTypes.NOW,
+		},
+		extension: {
+			type: DataTypes.STRING,
+			allowNull: false,
 		},
 	})
 

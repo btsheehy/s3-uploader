@@ -9,13 +9,10 @@ import {
 	Legend,
 } from "recharts"
 
+import { StatsResponse } from "../api/client"
+
 interface StatsProps {
-	stats: {
-		totalUploads: number
-		totalSize: number
-		fileTypeDistribution: { filetype: string; count: number }[]
-		uploadsByDate: { date: string; count: number }[]
-	}
+	stats: StatsResponse
 }
 
 const Statistics: React.FC<StatsProps> = ({ stats }) => {

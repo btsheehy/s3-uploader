@@ -2,27 +2,27 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import FileUpload from "./FileUpload"
 import Statistics from "./Statistics"
-import api from "../api/axios"
+import { StatsResponse, fetchStats, logout } from "../api/client"
 
 const Dashboard: React.FC = () => {
-	const [stats, setStats] = useState(null)
+	const [stats, setStats] = useState<StatsResponse | null>(null)
 	const navigate = useNavigate()
 
-	const fetchStats = async () => {
+	const getStats = async () => {
 		try {
-			const response = await api.get("http://localhost:3000/api/stats")
-			setStats(response.data)
+			const stats = await fetchStats()
+			setStats(stats)
 		} catch (error) {
 			console.error("Error fetching stats:", error)
 		}
 	}
 
 	useEffect(() => {
-		fetchStats()
+		getStats()
 	}, [])
 
-	const handleLogout = () => {
-		localStorage.removeItem("token")
+	const handleLogout = async () => {
+		await logout()
 		navigate("/login")
 	}
 
@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
 			<img src="%PUBLIC%/ColeridgeLogo.png" alt="ColeridgeLogo" />
 			<h1>Dashboard</h1>
 			<button onClick={handleLogout}>Logout</button>
-			<FileUpload onUploadComplete={fetchStats} />
+			<FileUpload onUploadComplete={getStats} />
 			{stats && <Statistics stats={stats} />}
 		</div>
 	)

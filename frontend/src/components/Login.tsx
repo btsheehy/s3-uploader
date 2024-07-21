@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import api from "../api/axios"
+import { login } from "../api/client"
 
 const Login: React.FC = () => {
 	const [username, setUsername] = useState("")
@@ -11,10 +11,7 @@ const Login: React.FC = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		try {
-			await api.post("http://localhost:3000/api/auth/login", {
-				username,
-				password,
-			})
+			await login(username, password)
 			navigate("/dashboard")
 		} catch (error) {
 			console.error("Login error:", error)
