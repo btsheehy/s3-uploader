@@ -38,16 +38,15 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 
 		const uploadResult = await s3.upload(params).promise()
 
-		console.log("req.user.id", req.user.id)
-
 		const newUpload = Upload.create({
-			filename: file.originalname,
-			filesize: file.size,
-			filetype: file.mimetype,
+			fileName: file.originalname,
+			fileSize: file.size,
+			fileType: file.mimetype,
+			extension: file.originalname.split(".")?.pop()?.toLowerCase() || null,
 			UserId: req.user.id,
 		})
 
-		res.json({ message: "File uploaded successfully", data: uploadResult })
+		res.json({ message: "File uploaded successfully" })
 	} catch (err) {
 		console.error(err)
 		res.status(500).json({ message: "Error uploading file" })

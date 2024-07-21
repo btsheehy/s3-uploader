@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Navigate } from "react-router-dom"
-import api from "../api/axios"
+import { checkAuth } from "../api/client"
 
 interface PrivateRouteProps {
 	children: React.ReactNode
@@ -10,16 +10,16 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
 	useEffect(() => {
-		const checkAuth = async () => {
+		const verifyAuth = async () => {
 			try {
-				await api.get("/api/auth/check")
+				await checkAuth()
 				setIsAuthenticated(true)
 			} catch (error) {
 				setIsAuthenticated(false)
 			}
 		}
 
-		checkAuth()
+		verifyAuth()
 	}, [])
 
 	if (isAuthenticated === null) {
