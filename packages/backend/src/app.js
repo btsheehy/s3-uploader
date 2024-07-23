@@ -12,10 +12,10 @@ dotenv.config()
 const app = express()
 
 const corsOptions = {
-	origin: "http://localhost:3000", // Replace with your frontend's URL
-	credentials: true, // This is important for sending cookies
-	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-	allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "http://localhost:3000", // Replace with your frontend's URL
+    credentials: true, // This is important for sending cookies
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 }
 
 // Middleware
@@ -31,7 +31,7 @@ app.use("/api/stats", statsRoutes)
 const PORT = process.env.PORT || 3000
 
 sequelize.sync().then(() => {
-	app.listen(PORT, () => {
-		console.log(`Server running on port ${PORT}`)
-	})
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`)
+    })
 })
