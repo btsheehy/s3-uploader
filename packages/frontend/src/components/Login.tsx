@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 
 import { login } from "../api/client"
 
@@ -37,6 +37,9 @@ const Login: React.FC = () => {
 				/>
 				<button type="submit">Login</button>
 			</form>
+			<h4>
+				Don't have an account? <Link to="/register">Register</Link>
+			</h4>
 		</div>
 	)
 }
