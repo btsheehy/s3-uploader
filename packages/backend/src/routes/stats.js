@@ -39,6 +39,28 @@ router.get("/", auth, async (req, res) => {
 			order: [[sequelize.fn("date", sequelize.col("uploadDate")), "ASC"]],
 		})
 
+		const uploadsByUser = await Upload.findAll({
+			attributes: [
+				"UserId",
+				[sequelize.fn("COUNT", sequelize.col("Upload.id")), "count"],
+			],
+			include: [
+				{
+					model: User,
+					as: "user",
+					attributes: ["username"],
+				},
+			],
+			where: filterObj,
+			group: ["UserId", "user.username"],
+		})
+
+		const uploadsByUserFormatted = uploadsByUser.map((v) => ({
+			count: v.dataValues.count,
+			username: v.user.username,
+			userId: v.UserId,
+		}))
+
 		const uploadSpaceByUser = await Upload.findAll({
 			attributes: [
 				"UserId",
@@ -66,6 +88,7 @@ router.get("/", auth, async (req, res) => {
 			totalSize,
 			fileTypeDistribution,
 			uploadsByDate,
+			uploadsByUser: uploadsByUserFormatted,
 			uploadSpaceByUser: uploadSpaceByUserFormatted,
 		})
 	} catch (err) {

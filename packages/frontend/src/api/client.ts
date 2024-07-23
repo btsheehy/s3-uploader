@@ -6,10 +6,18 @@ export type StatsResponse = {
 	uploadsByDate: { date: string; count: number }[]
 	fileTypeDistribution: { fileType: string; count: number }[]
 	uploadSpaceByUser: { username: string; totalSize: number; userId: number }[]
+	uploadsByUser: { username: string; count: number; userId: number }[]
 }
 
 export type MessageResponse = {
 	message: string
+}
+
+export type AuthResponse = MessageResponse & {
+	user: {
+		username: string
+		id: number
+	}
 }
 
 export const fetchStats = async () => {
@@ -18,7 +26,7 @@ export const fetchStats = async () => {
 }
 
 export const register = async (username: string, password: string) => {
-	const response = await axios.post<MessageResponse>("/auth/register", {
+	const response = await axios.post<AuthResponse>("/auth/register", {
 		username,
 		password,
 	})
@@ -26,7 +34,7 @@ export const register = async (username: string, password: string) => {
 }
 
 export const login = async (username: string, password: string) => {
-	const response = await axios.post<MessageResponse>("/auth/login", {
+	const response = await axios.post<AuthResponse>("/auth/login", {
 		username,
 		password,
 	})

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -9,7 +13,7 @@ body {
   background-color: #f0f0f0;
 }
 
-.App {
+ .App {
   background-color: white;
   padding: 2rem;
   border-radius: 8px;
@@ -18,18 +22,15 @@ body {
 
 input, button {
   display: block;
-  width: 100%;
   margin-bottom: 1rem;
   padding: 0.5rem;
 }
 
-button {
-  background-color: #161d3e;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
 button:hover {
   background-color: #0056b3;
+}
+
+#root {
+  width: 70%;
+  min-width: 500px;
 }

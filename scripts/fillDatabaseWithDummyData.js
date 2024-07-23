@@ -9,6 +9,10 @@ const FILE_TYPES = [
 ]
 const EXTENSIONS = ["txt", "pdf", "docx", "doc"]
 
+function getWeightedRandom(min, max, skew = 1) {
+	return Math.floor(Math.pow(Math.random(), skew) * (max - min + 1) + min)
+}
+
 async function generateDummyData(numUploads = 1000, numUsers = 10) {
 	try {
 		await sequelize.sync()
@@ -26,25 +30,56 @@ async function generateDummyData(numUploads = 1000, numUsers = 10) {
 
 		const uploads = []
 
+		// Assign different characteristics to users
+		const userCharacteristics = dbUsers.reverse().map((user) => ({
+			id: user.id,
+			preferredExtension: faker.helpers.arrayElement(EXTENSIONS),
+			uploadFrequency: Math.random(), // 0 to 1, higher means more uploads
+			averageFileSize: getWeightedRandom(1024, 10 * 1024 * 1024, 2), // Skewed towards smaller files
+		}))
+
 		for (let i = 0; i < numUploads; i++) {
-			const extension = faker.helpers.arrayElement(EXTENSIONS)
+			const user = faker.helpers.arrayElement(userCharacteristics)
+
+			// Users are more likely to upload their preferred file type
+			const extension =
+				Math.random() < 0.7
+					? user.preferredExtension
+					: faker.helpers.arrayElement(EXTENSIONS)
 			const extensionIndex = EXTENSIONS.indexOf(extension)
 			const fileType = FILE_TYPES[extensionIndex]
+
+			// Generate upload date based on user's upload frequency
 			const uploadDate = faker.date.between({
-				from: "2023-01-01",
-				to: "2024-07-22",
+				from: new Date(2023, 0, 1),
+				to: new Date(2024, 6, 22),
 			})
-			const userId = faker.helpers.arrayElement(dbUsers).id
+
+			// Generate file size based on user's average file size, with some variation
+			const fileSize = Math.min(
+				Math.max(
+					getWeightedRandom(
+						user.averageFileSize * 0.5,
+						user.averageFileSize * 1.5,
+						1.5,
+					),
+					1024,
+				),
+				10 * 1024 * 1024,
+			)
 
 			uploads.push({
 				fileName: faker.system.fileName() + "." + extension,
-				fileSize: faker.number.int({ min: 1024, max: 10 * 1024 * 1024 }), // 1KB to 10MB
+				fileSize: fileSize,
 				fileType: fileType,
 				uploadDate: uploadDate,
 				extension: extension,
-				UserId: userId,
+				UserId: user.id,
 			})
 		}
+
+		// Sort uploads by date
+		uploads.sort((a, b) => a.uploadDate - b.uploadDate)
 
 		await Upload.bulkCreate(uploads)
 
@@ -57,4 +92,4 @@ async function generateDummyData(numUploads = 1000, numUsers = 10) {
 	}
 }
 
-generateDummyData()
+generateDummyData(1000, 0)

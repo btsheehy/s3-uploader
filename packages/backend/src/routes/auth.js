@@ -27,7 +27,10 @@ router.post("/register", async (req, res) => {
 					maxAge: 3600000, // 1 hour
 				})
 
-				res.json({ message: "Registered successfully" })
+				res.json({
+					message: "Registered successfully",
+					user: { id: user.id, username: user.username },
+				})
 			},
 		)
 	} catch (err) {
@@ -60,7 +63,10 @@ router.post("/login", async (req, res) => {
 					maxAge: 3600000, // 1 hour
 				})
 
-				res.json({ message: "Logged in successfully" })
+				res.json({
+					message: "Logged in successfully",
+					user: { id: user.id, username: user.username },
+				})
 			},
 		)
 	} catch (err) {
