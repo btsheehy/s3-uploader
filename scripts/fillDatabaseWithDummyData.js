@@ -31,7 +31,7 @@ async function generateDummyData(numUploads = 1000, numUsers = 10) {
 		const uploads = []
 
 		// Assign different characteristics to users
-		const userCharacteristics = dbUsers.reverse().map((user) => ({
+		const userCharacteristics = dbUsers.map((user) => ({
 			id: user.id,
 			preferredExtension: faker.helpers.arrayElement(EXTENSIONS),
 			uploadFrequency: Math.random(), // 0 to 1, higher means more uploads
@@ -92,4 +92,4 @@ async function generateDummyData(numUploads = 1000, numUsers = 10) {
 	}
 }
 
-generateDummyData(1000, 0)
+generateDummyData(1000, 10)
