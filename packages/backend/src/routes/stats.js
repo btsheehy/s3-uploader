@@ -1,24 +1,31 @@
 const express = require("express")
 const { Op } = require("sequelize")
 const auth = require("../middleware/auth")
-const { Upload, sequelize } = require("../models")
+const { Upload, sequelize, User } = require("../models")
 
 const router = express.Router()
 
 router.get("/", auth, async (req, res) => {
 	try {
-		const totalUploads = await Upload.count({ where: { UserId: req.user.id } })
+		const filterObj = {}
+		if (req.query.userId) filterObj.UserId = req.params.userId
+		if (req.query.startDate || req.query.endDate) {
+			filterObj.uploadDate = {}
+			if (req.query.startDate)
+				filterObj.uploadDate[Op.gte] = req.query.startDate
+			if (req.query.endDate) filterObj.uploadDate[Op.lte] = req.query.endDate
+		}
 
-		const totalSize = await Upload.sum("filesize", {
-			where: { UserId: req.user.id },
-		})
+		const totalUploads = await Upload.count({ where: filterObj })
+
+		const totalSize = await Upload.sum("filesize", { where: filterObj })
 
 		const fileTypeDistribution = await Upload.findAll({
 			attributes: [
 				"extension",
 				[sequelize.fn("COUNT", sequelize.col("extension")), "count"],
 			],
-			where: { UserId: req.user.id },
+			where: filterObj,
 			group: ["extension"],
 		})
 
@@ -27,16 +34,39 @@ router.get("/", auth, async (req, res) => {
 				[sequelize.fn("date", sequelize.col("uploadDate")), "date"],
 				[sequelize.fn("COUNT", sequelize.col("id")), "count"],
 			],
-			where: { UserId: req.user.id },
+			where: filterObj,
 			group: [sequelize.fn("date", sequelize.col("uploadDate"))],
 			order: [[sequelize.fn("date", sequelize.col("uploadDate")), "ASC"]],
 		})
+
+		const uploadSpaceByUser = await Upload.findAll({
+			attributes: [
+				"UserId",
+				[sequelize.fn("SUM", sequelize.col("filesize")), "totalSize"],
+			],
+			include: [
+				{
+					model: User,
+					as: "user",
+					attributes: ["username"],
+				},
+			],
+			where: filterObj,
+			group: ["UserId", "user.username"],
+		})
+
+		const uploadSpaceByUserFormatted = uploadSpaceByUser.map((v) => ({
+			totalSize: v.dataValues.totalSize,
+			username: v.user.username,
+			userId: v.UserId,
+		}))
 
 		res.json({
 			totalUploads,
 			totalSize,
 			fileTypeDistribution,
 			uploadsByDate,
+			uploadSpaceByUser: uploadSpaceByUserFormatted,
 		})
 	} catch (err) {
 		console.error(err)
