@@ -25,7 +25,7 @@ const Statistics: React.FC<StatsProps> = ({ stats }) => {
 			<h3>File Type Distribution</h3>
 			<BarChart width={600} height={300} data={stats.fileTypeDistribution}>
 				<CartesianGrid strokeDasharray="3 3" />
-				<XAxis dataKey="filetype" />
+				<XAxis dataKey="extension" />
 				<YAxis />
 				<Tooltip />
 				<Legend />

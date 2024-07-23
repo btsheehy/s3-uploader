@@ -131,3 +131,6 @@ dist
 
 .DS_Store
 *.sqlite
+
+build/
+pnpm-lock.yaml

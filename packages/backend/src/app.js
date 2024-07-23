@@ -12,7 +12,7 @@ dotenv.config()
 const app = express()
 
 const corsOptions = {
-	origin: "http://localhost:3001", // Replace with your frontend's URL
+	origin: "http://localhost:3000", // Replace with your frontend's URL
 	credentials: true, // This is important for sending cookies
 	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 	allowedHeaders: ["Content-Type", "Authorization"],

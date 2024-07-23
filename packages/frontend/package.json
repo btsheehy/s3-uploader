@@ -1,5 +1,5 @@
 {
-	"name": "s3-upload-frontend",
+	"name": "frontend",
 	"version": "0.1.0",
 	"private": true,
 	"proxy": "http://localhost:3000",
@@ -25,7 +25,8 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"format": "prettier --write 'src/**/*.{js,ts}'"
 	},
 	"eslintConfig": {
 		"extends": ["react-app", "react-app/jest"]

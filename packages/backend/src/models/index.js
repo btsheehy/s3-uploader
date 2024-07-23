@@ -6,8 +6,8 @@ const sequelize = new Sequelize({
 	storage: path.join(__dirname, "..", "..", "database.sqlite"),
 })
 
-const User = require("./User")(sequelize)
-const Upload = require("./Upload")(sequelize)
+const User = require("./user")(sequelize)
+const Upload = require("./upload")(sequelize)
 
 User.hasMany(Upload, { foreignKey: "UserId", as: "uploads" })
 Upload.belongsTo(User, { foreignKey: "UserId", as: "user" })

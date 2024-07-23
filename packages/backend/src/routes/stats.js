@@ -15,11 +15,11 @@ router.get("/", auth, async (req, res) => {
 
 		const fileTypeDistribution = await Upload.findAll({
 			attributes: [
-				"filetype",
-				[sequelize.fn("COUNT", sequelize.col("filetype")), "count"],
+				"extension",
+				[sequelize.fn("COUNT", sequelize.col("extension")), "count"],
 			],
 			where: { UserId: req.user.id },
-			group: ["filetype"],
+			group: ["extension"],
 		})
 
 		const uploadsByDate = await Upload.findAll({

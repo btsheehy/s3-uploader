@@ -1,5 +1,4 @@
 const express = require("express")
-const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const { User } = require("../models")
 const auth = require("../middleware/auth")
@@ -12,10 +11,7 @@ router.post("/register", async (req, res) => {
 		let user = await User.findOne({ where: { username } })
 		if (user) return res.status(400).json({ message: "User already exists" })
 
-		const salt = await bcrypt.genSalt(10)
-		const hashedPassword = await bcrypt.hash(password, salt)
-
-		user = await User.create({ username, password: hashedPassword })
+		user = await User.create({ username, password })
 
 		const payload = { user: { id: user.id } }
 		jwt.sign(
@@ -46,7 +42,7 @@ router.post("/login", async (req, res) => {
 		let user = await User.findOne({ where: { username } })
 		if (!user) return res.status(400).json({ message: "Invalid credentials" })
 
-		const isMatch = await bcrypt.compare(password, user.password)
+		const isMatch = user.validPassword(password)
 		if (!isMatch)
 			return res.status(400).json({ message: "Invalid credentials" })
 
