@@ -5,6 +5,7 @@ export type StatsResponse = {
 	totalUploads: number
 	uploadsByDate: { date: string; count: number }[]
 	fileTypeDistribution: { fileType: string; count: number }[]
+	uploadSpaceByUser: { username: string; totalSize: number; userId: number }[]
 }
 
 export type MessageResponse = {

@@ -9,16 +9,20 @@ const FILE_TYPES = [
 ]
 const EXTENSIONS = ["txt", "pdf", "docx", "doc"]
 
-async function generateDummyData(numUploads = 1000) {
+async function generateDummyData(numUploads = 1000, numUsers = 10) {
 	try {
 		await sequelize.sync()
 
-		// Ensure we have at least one user
-		const user = await User.findOne()
-		if (!user) {
-			console.error("No users found. Please create a user first.")
-			return
+		const users = []
+		for (let i = 0; i < numUsers; i++) {
+			users.push({
+				username: faker.person.firstName(),
+				password: faker.internet.password(),
+			})
 		}
+		await User.bulkCreate(users)
+
+		const dbUsers = await User.findAll()
 
 		const uploads = []
 
@@ -30,6 +34,7 @@ async function generateDummyData(numUploads = 1000) {
 				from: "2023-01-01",
 				to: "2024-07-22",
 			})
+			const userId = faker.helpers.arrayElement(dbUsers).id
 
 			uploads.push({
 				fileName: faker.system.fileName() + "." + extension,
@@ -37,12 +42,13 @@ async function generateDummyData(numUploads = 1000) {
 				fileType: fileType,
 				uploadDate: uploadDate,
 				extension: extension,
-				UserId: user.id,
+				UserId: userId,
 			})
 		}
 
 		await Upload.bulkCreate(uploads)
 
+		console.log(`${numUsers} dummy users created successfully.`)
 		console.log(`${numUploads} dummy uploads created successfully.`)
 	} catch (error) {
 		console.error("Error generating dummy data:", error)
